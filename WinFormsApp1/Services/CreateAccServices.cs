@@ -10,17 +10,20 @@ using Nethereum.Signer;
 using Nethereum.Model;
 using Nethereum.HdWallet;
 using NBitcoin;
+using System.Windows.Forms;
 
 namespace WinFormsApp1.Services
 {
     public class CreateAccServices : ICreateAccount
     {
         private readonly appDbcontext dbcontext;
+
         public CreateAccServices()
         {
             dbcontext = new appDbcontext();
         }
-        public async Task CreateAcc( int sl)
+
+        public async Task CreateAcc(int sl)
         {
             var accounts = new List<ListAcc>();
 
@@ -47,10 +50,16 @@ namespace WinFormsApp1.Services
 
                     await dbcontext.SaveChangesAsync();
                     trans.Commit();
+
+                    // Hiển thị thông báo khi thành công
+                    MessageBox.Show("Thêm tài khoản thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
-                catch (Exception )
+                catch (Exception ex)
                 {
                     trans.Rollback();
+
+                    // Hiển thị thông báo khi thất bại và in chi tiết lỗi (điều này có thể được thay đổi tùy thuộc vào cách bạn muốn xử lý lỗi)
+                    MessageBox.Show($"Thêm tài khoản thất bại. Lỗi: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }
